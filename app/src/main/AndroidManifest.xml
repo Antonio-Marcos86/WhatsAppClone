@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsAppClone">
-        <activity android:name=".activity.HomeActivity"></activity>
+        <activity android:name=".activity.ConfiguracoesActivity"
+            android:parentActivityName=".activity.HomeActivity"></activity>
+        <activity android:name=".activity.HomeActivity" />
         <activity
             android:name=".activity.loginActivity"
             android:screenOrientation="portrait" />

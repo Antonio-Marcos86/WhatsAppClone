@@ -26,7 +26,7 @@
         app:stl_overlineThickness="1dp"
         app:stl_underlineColor="#4D000000"
         app:stl_underlineThickness="1dp"
-        app:stl_dividerColor="#4D000000"
+        app:stl_dividerColor="@color/verde_escuro"
         app:stl_dividerThickness="1dp"
         app:stl_defaultTabBackground="?attr/selectableItemBackground"
         app:stl_defaultTabTextAllCaps="true"
