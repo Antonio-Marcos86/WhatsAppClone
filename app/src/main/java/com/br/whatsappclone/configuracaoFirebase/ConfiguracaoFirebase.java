@@ -12,7 +12,7 @@ public class ConfiguracaoFirebase {
     private static StorageReference storageReference;
 
     // retorna a instância do firebase database
-    public static DatabaseReference getFirebase(){
+    public static DatabaseReference getFirebaseDatabase(){
         if(databaseRef == null){
             databaseRef= FirebaseDatabase.getInstance().getReference();
         }
@@ -26,7 +26,7 @@ public class ConfiguracaoFirebase {
         return firebaseAuth;
     }
     // retorna a instância do firebase storage
-    public static StorageReference getStorage(){
+    public static StorageReference getFirebaseStorage(){
         if(storageReference == null){
             storageReference = FirebaseStorage.getInstance().getReference();
         }

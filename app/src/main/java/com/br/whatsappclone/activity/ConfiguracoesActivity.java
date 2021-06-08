@@ -19,7 +19,7 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // exibir o botão voltar
-        // alterandono manifest
+        // alterando no manifest
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }

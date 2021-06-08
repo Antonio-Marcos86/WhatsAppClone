@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.br.whatsappclone.R;
 import com.br.whatsappclone.configuracaoFirebase.ConfiguracaoFirebase;
+import com.br.whatsappclone.helper.usuarioFirebase;
 import com.br.whatsappclone.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,17 +21,23 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
+import org.jetbrains.annotations.NotNull;
+
 public class CadastroActivity extends AppCompatActivity {
 
     private EditText campoNome,campoEmail,campoSenha;
     private FirebaseAuth autenticacao;
-
+    //private DatabaseReference firebaseRef;
+    private String idUsuarioLogado;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
 
         inicializaComponentes();
+        //firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        idUsuarioLogado = usuarioFirebase.getId();
+
     }
 
     public void salvarUsuario(Usuario usuario){
@@ -39,11 +46,15 @@ public class CadastroActivity extends AppCompatActivity {
                 usuario.getEmail(), usuario.getSenha()
         ).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
-            public void onComplete(@NonNull @org.jetbrains.annotations.NotNull Task<AuthResult> task) {
+            public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     exibirMensagem("Cadastro realizado com sucesso!");
+
+                    usuario.salvar();
+                    home();
+
                 }else{
-                    // em caso de erro mastra a mensagem correspondente
+                    // em caso de erro mostra a mensagem correspondente
                     String erroExecao="";
 
                     try{
@@ -58,10 +69,12 @@ public class CadastroActivity extends AppCompatActivity {
                         erroExecao = "ao cadastrar usuário: "+ e.getMessage();
                         e.printStackTrace();
                     }
-                        exibirMensagem("Erro: "+ erroExecao);
+                    exibirMensagem("Erro: "+ erroExecao);
                 }
             }
         });
+
+
     }
 
     public void cadastrarUsuario(View view){
@@ -75,12 +88,14 @@ public class CadastroActivity extends AppCompatActivity {
             if(!textoEmail.isEmpty()){
                 if(!textoSenha.isEmpty()){
                     Usuario usuario = new Usuario();
+                    usuario.setId(idUsuarioLogado);
                     usuario.setNome(textoNome);
                     usuario.setEmail(textoEmail);
                     usuario.setSenha(textoSenha);
 
                     salvarUsuario(usuario);
-                    home();
+
+
                     finish();
                 }else{ exibirMensagem("preencha sua senha"); }
             }else{ exibirMensagem("preencha seu email"); }
