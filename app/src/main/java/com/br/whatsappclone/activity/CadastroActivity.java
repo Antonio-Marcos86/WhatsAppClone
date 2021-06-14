@@ -28,8 +28,7 @@ public class CadastroActivity extends AppCompatActivity {
 
     private EditText campoNome,campoEmail,campoSenha;
     private FirebaseAuth autenticacao;
-    private String idUsuarioLogado;
-    private DatabaseReference firebaseRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +36,7 @@ public class CadastroActivity extends AppCompatActivity {
 
         inicializaComponentes();
         autenticacao = ConfiguracaoFirebase.getFirebaseAuth();
-        firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
-        idUsuarioLogado = UsuarioFirebase.getUidUsuario();
+
 
     }
 
@@ -51,8 +49,9 @@ public class CadastroActivity extends AppCompatActivity {
             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     exibirMensagem("Cadastro realizado com sucesso!");
-                        usuario.salvarUsuario();
-
+                    String indetificarUsuario = UsuarioFirebase.getUidUsuario();
+                    usuario.setUid(indetificarUsuario);
+                    usuario.salvarUsuario();
                 }else{
                     // em caso de erro mostra a mensagem correspondente
                     String erroExecao="";
@@ -88,11 +87,11 @@ public class CadastroActivity extends AppCompatActivity {
             if(!textoEmail.isEmpty()){
                 if(!textoSenha.isEmpty()){
                     Usuario usuario = new Usuario();
-                    usuario.setUid(idUsuarioLogado);
                     usuario.setNome(textoNome);
                     usuario.setEmail(textoEmail);
                     usuario.setSenha(textoSenha);
                     salvarUsuario(usuario);
+
                     home();
                     finish();
                 }else{ exibirMensagem("preencha sua senha"); }
