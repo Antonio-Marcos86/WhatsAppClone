@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.br.whatsappclone.R;
 import com.br.whatsappclone.configuracaoFirebase.ConfiguracaoFirebase;
-import com.br.whatsappclone.helper.usuarioFirebase;
+import com.br.whatsappclone.helper.UsuarioFirebase;
 import com.br.whatsappclone.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,21 +27,18 @@ public class CadastroActivity extends AppCompatActivity {
 
     private EditText campoNome,campoEmail,campoSenha;
     private FirebaseAuth autenticacao;
-    //private DatabaseReference firebaseRef;
-    private String idUsuarioLogado;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
 
         inicializaComponentes();
-        //firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
-        idUsuarioLogado = usuarioFirebase.getId();
+        autenticacao = ConfiguracaoFirebase.getFirebaseAuth();
 
     }
 
-    public void salvarUsuario(Usuario usuario){
-        autenticacao = ConfiguracaoFirebase.getFirebaseAuth();
+    public void salvarUsuario(final Usuario usuario){
+
         autenticacao.createUserWithEmailAndPassword(
                 usuario.getEmail(), usuario.getSenha()
         ).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -50,8 +47,14 @@ public class CadastroActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     exibirMensagem("Cadastro realizado com sucesso!");
 
-                    usuario.salvar();
-                    home();
+                    try{
+                        String identificadorusuario = UsuarioFirebase.getUidUsuario();
+                        usuario.setUid(identificadorusuario);
+                        usuario.salvarUsuario();
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+
 
                 }else{
                     // em caso de erro mostra a mensagem correspondente
@@ -88,14 +91,12 @@ public class CadastroActivity extends AppCompatActivity {
             if(!textoEmail.isEmpty()){
                 if(!textoSenha.isEmpty()){
                     Usuario usuario = new Usuario();
-                    usuario.setId(idUsuarioLogado);
                     usuario.setNome(textoNome);
                     usuario.setEmail(textoEmail);
                     usuario.setSenha(textoSenha);
 
                     salvarUsuario(usuario);
-
-
+                    home();
                     finish();
                 }else{ exibirMensagem("preencha sua senha"); }
             }else{ exibirMensagem("preencha seu email"); }

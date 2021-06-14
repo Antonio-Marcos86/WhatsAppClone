@@ -5,25 +5,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
 public class Usuario {
-    private String id;
+    private String Uid;
     private String nome;
     private String email;
     private String senha;
 
     public Usuario() {
     }
-    public void salvar(){
+    public void salvarUsuario(){
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
-        DatabaseReference usuario = firebaseRef.child("usuarios").child(getId());
+        DatabaseReference usuario = firebaseRef.child("usuario").child(getUId());
         usuario.setValue(this);
     }
 
-    public String getId() {
-        return id;
+    private String getUId() {
+        return Uid;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUid(String uid) {
+        Uid = uid;
     }
 
     public String getNome() {
