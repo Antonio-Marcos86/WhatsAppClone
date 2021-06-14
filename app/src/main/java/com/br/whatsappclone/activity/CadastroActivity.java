@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.database.DatabaseReference;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,6 +28,8 @@ public class CadastroActivity extends AppCompatActivity {
 
     private EditText campoNome,campoEmail,campoSenha;
     private FirebaseAuth autenticacao;
+    private String idUsuarioLogado;
+    private DatabaseReference firebaseRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +37,8 @@ public class CadastroActivity extends AppCompatActivity {
 
         inicializaComponentes();
         autenticacao = ConfiguracaoFirebase.getFirebaseAuth();
+        firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        idUsuarioLogado = UsuarioFirebase.getUidUsuario();
 
     }
 
@@ -46,15 +51,7 @@ public class CadastroActivity extends AppCompatActivity {
             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     exibirMensagem("Cadastro realizado com sucesso!");
-
-                    try{
-                        String identificadorusuario = UsuarioFirebase.getUidUsuario();
-                        usuario.setUid(identificadorusuario);
                         usuario.salvarUsuario();
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-
 
                 }else{
                     // em caso de erro mostra a mensagem correspondente
@@ -91,10 +88,10 @@ public class CadastroActivity extends AppCompatActivity {
             if(!textoEmail.isEmpty()){
                 if(!textoSenha.isEmpty()){
                     Usuario usuario = new Usuario();
+                    usuario.setUid(idUsuarioLogado);
                     usuario.setNome(textoNome);
                     usuario.setEmail(textoEmail);
                     usuario.setSenha(textoSenha);
-
                     salvarUsuario(usuario);
                     home();
                     finish();

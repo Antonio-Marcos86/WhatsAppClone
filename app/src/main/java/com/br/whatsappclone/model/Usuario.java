@@ -23,7 +23,7 @@ public class Usuario {
     }
 
     public void setUid(String uid) {
-        Uid = uid;
+       this.Uid = uid;
     }
 
     public String getNome() {
